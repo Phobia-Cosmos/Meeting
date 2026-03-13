@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>组会汇报模板</title>
+  <style>
+    :root {
+      --bg: #eef2ff;
+      --panel: #ffffff;
+      --text: #172554;
+      --muted: #475569;
+      --primary: #2563eb;
+      --accent: #0f172a;
+      --soft: #dbeafe;
+      --border: #cbd5e1;
+      --ok: #0f766e;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(135deg, #dbeafe 0%, #eef2ff 50%, #f8fafc 100%);
+      color: var(--text);
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide {
+      display: none;
+      width: min(94vw, calc(94vh * 16 / 9));
+      aspect-ratio: 16 / 9;
+      background: var(--panel);
+      border-radius: 28px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+      padding: 42px 52px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide.active { display: grid; }
+
+    .cover {
+      grid-template-rows: 1fr auto auto;
+      background:
+        radial-gradient(circle at top right, rgba(37, 99, 235, 0.16), transparent 24%),
+        linear-gradient(135deg, #eff6ff 0%, #ffffff 60%, #f8fafc 100%);
+    }
+
+    .standard {
+      grid-template-rows: auto 1fr auto;
+      gap: 22px;
+    }
+
+    .eyebrow {
+      font-size: 18px;
+      color: var(--primary);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 40px;
+      line-height: 1.18;
+      color: var(--accent);
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 30px;
+      color: var(--accent);
+    }
+
+    .subtitle {
+      font-size: 20px;
+      color: var(--muted);
+      max-width: 900px;
+      line-height: 1.6;
+    }
+
+    .meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .chip {
+      background: var(--soft);
+      color: var(--primary);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .card p, .card li, .panel li {
+      font-size: 18px;
+      line-height: 1.65;
+      color: #1e293b;
+      margin: 0;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 22px;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      min-height: 100%;
+    }
+
+    .figure {
+      border: 2px dashed #93c5fd;
+      border-radius: 18px;
+      min-height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #64748b;
+      background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+      padding: 18px;
+      font-size: 18px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .stat {
+      background: #eff6ff;
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid #bfdbfe;
+    }
+
+    .stat .value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .stat .label {
+      margin-top: 8px;
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .page {
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .nav {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    button {
+      border: none;
+      background: #1d4ed8;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.28);
+    }
+
+    @media print {
+      body {
+        overflow: visible;
+        display: block;
+        background: #fff;
+      }
+      .deck {
+        display: block;
+        width: auto;
+        height: auto;
+      }
+      .slide {
+        display: grid !important;
+        width: 100%;
+        max-width: none;
+        border-radius: 0;
+        box-shadow: none;
+        page-break-after: always;
+        break-after: page;
+      }
+      .nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide cover active">
+      <div class="eyebrow">课题组周会模板</div>
+      <div>
+        <h1>[本周汇报标题]</h1>
+        <p class="subtitle">[用一句话概括本周进展、核心结果或阶段性结论。]</p>
+      </div>
+      <div class="meta">
+        <span class="chip">日期：[YYYY-MM-DD]</span>
+        <span class="chip">汇报人：[你的名字]</span>
+        <span class="chip">研究主题：[课题名称]</span>
+      </div>
+    </section>
+
+    <section class="slide standard">
+      <h2>1. 本周目标与完成情况</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>目标 1</h3>
+          <p>[目标描述]</p>
+        </div>
+        <div class="card">
+          <h3>目标 2</h3>
+          <p>[目标描述]</p>
+        </div>
+        <div class="card">
+          <h3>目标 3</h3>
+          <p>[目标描述]</p>
+        </div>
+      </div>
+      <div class="footer">
+        <span>建议每个卡片只保留 1 到 2 条重点</span>
+        <span class="page"></span>
+      </div>
+    </section>
+
+    <section class="slide standard">
+      <h2>2. 方法 / 实验 / 实现过程</h2>
+      <div class="grid-2">
+        <div class="panel">
+          <ul>
+            <li>[本周做了什么步骤 1]</li>
+            <li>[本周做了什么步骤 2]</li>
+            <li>[本周做了什么步骤 3]</li>
+            <li>[这里适合放代码修改点、实验流程、系统结构变化]</li>
+          </ul>
+        </div>
+        <div class="figure">[插图占位：后续可替换为截图、流程图、实验框架图]</div>
+      </div>
+      <div class="footer">
+        <span>图尽量选“能支撑结论”的图，而不是仅作装饰</span>
+        <span class="page"></span>
+      </div>
+    </section>
+
+    <section class="slide standard">
+      <h2>3. 关键结果与结论</h2>
+      <div style="display:grid; gap:22px;">
+        <div class="stats">
+          <div class="stat">
+            <div class="value">[指标 A]</div>
+            <div class="label">[指标解释]</div>
+          </div>
+          <div class="stat">
+            <div class="value">[指标 B]</div>
+            <div class="label">[指标解释]</div>
+          </div>
+          <div class="stat">
+            <div class="value">[指标 C]</div>
+            <div class="label">[指标解释]</div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="figure">[结果图 / 曲线图 / 对比图 占位]</div>
+          <div class="panel">
+            <ul>
+              <li>[结果 1：发生了什么变化]</li>
+              <li>[结果 2：为什么有意义]</li>
+              <li>[结果 3：与预期是否一致]</li>
+              <li>[一句话结论：建议高亮讲述]</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <span>建议把“数据现象”与“解释”放在同一页</span>
+        <span class="page"></span>
+      </div>
+    </section>
+
+    <section class="slide standard">
+      <h2>4. 问题、风险与下周计划</h2>
+      <div class="grid-2">
+        <div class="panel">
+          <h3 style="margin-top:0;">当前问题</h3>
+          <ul>
+            <li>[问题 1]</li>
+            <li>[问题 2]</li>
+            <li>[风险 3]</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3 style="margin-top:0; color:var(--ok);">下周计划</h3>
+          <ul>
+            <li>[计划 1]</li>
+            <li>[计划 2]</li>
+            <li>[计划 3]</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer">
+        <span>最后一页适合明确“需要老师/组内讨论的问题”</span>
+        <span class="page"></span>
+      </div>
+    </section>
+  </main>
+
+  <div class="nav">
+    <button id="prev">上一页</button>
+    <button id="next">下一页</button>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const pages = Array.from(document.querySelectorAll('.page'));
+    let current = 0;
+
+    function render() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === current);
+      });
+      pages.forEach((page, index) => {
+        page.textContent = `${index + 1} / ${slides.length}`;
+      });
+    }
+
+    function go(step) {
+      current = Math.min(slides.length - 1, Math.max(0, current + step));
+      render();
+    }
+
+    document.getElementById('prev').addEventListener('click', () => go(-1));
+    document.getElementById('next').addEventListener('click', () => go(1));
+    document.addEventListener('keydown', (event) => {
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) go(1);
+      if (["ArrowLeft", "PageUp"].includes(event.key)) go(-1);
+    });
+
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>03-14 UAV 精简汇报</title>
+<style>
+:root { --text:#0f172a; --muted:#475569; --primary:#1d4ed8; --border:#cbd5e1; }
+* { box-sizing:border-box; }
+html,body { margin:0; height:100%; font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; background:linear-gradient(135deg,#dbeafe 0%,#eff6ff 45%,#f8fafc 100%); color:var(--text); }
+body { display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.deck { width:100vw; height:100vh; display:flex; align-items:center; justify-content:center; }
+.slide { display:none; width:min(95vw, calc(95vh * 16 / 9)); aspect-ratio:16/9; background:#fff; border-radius:24px; box-shadow:0 24px 60px rgba(15,23,42,.18); padding:28px 34px; overflow:hidden; }
+.slide.active { display:grid; }
+.standard { grid-template-rows:auto auto 1fr auto; gap:12px; }
+.eyebrow { color:var(--primary); font-size:14px; font-weight:800; }
+h2 { margin:0; font-size:26px; }
+.lead { margin:0; font-size:15px; line-height:1.6; color:var(--muted); }
+.stats { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
+.stat { background:#eff6ff; border:1px solid #bfdbfe; border-radius:16px; padding:12px; }
+.stat .value { font-size:20px; font-weight:800; color:var(--primary); }
+.stat .label { margin-top:6px; font-size:12px; color:var(--muted); }
+.card,.scenario-card { background:linear-gradient(180deg,#fff 0%,#f8fafc 100%); border:1px solid var(--border); border-radius:18px; padding:14px; }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+th,td { border:1px solid var(--border); padding:8px; text-align:left; }
+th { background:#eff6ff; color:var(--primary); }
+.pair-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:stretch; }
+.scenario-title { font-size:17px; font-weight:700; margin-bottom:8px; }
+.scenario-desc { font-size:13px; line-height:1.55; color:var(--muted); margin-bottom:10px; min-height:40px; }
+.image-row { display:grid; grid-template-columns:1.15fr .85fr; gap:10px; margin-bottom:10px; }
+.image-row img { width:100%; height:170px; object-fit:contain; background:#fff; border-radius:10px; }
+ul { margin:0; padding-left:18px; }
+li { font-size:13px; line-height:1.55; margin-bottom:4px; }
+.footer { display:flex; justify-content:space-between; align-items:center; color:var(--muted); font-size:12px; }
+.page { font-weight:800; color:var(--primary); }
+.nav { position:fixed; right:24px; bottom:24px; display:flex; gap:10px; }
+button { border:none; background:#1d4ed8; color:#fff; padding:12px 16px; border-radius:12px; cursor:pointer; box-shadow:0 8px 20px rgba(37,99,235,.28); }
+@media print { body { overflow:visible; display:block; background:#fff; } .deck { display:block; width:auto; height:auto; } .slide { display:grid !important; width:100%; max-width:none; border-radius:0; box-shadow:none; page-break-after:always; break-after:page; } .nav { display:none; } }
+</style></head><body>
+<main class="deck">
+<section class="slide standard active">
+<div class="eyebrow">2026-03-14 UAV 精简汇报</div>
+<h2>UAV / 机器狗结果总览（3 页版）</h2>
+<p class="lead">仅展示结果，不展开背景。当前 4 个场景均已成功完成事件驱动语义纠偏与重规划；本周微架构部分暂无新材料。</p>
+<div style="display:grid; gap:12px; align-content:start;">
+<div class="stats">
+<div class="stat"><div class="value">4/4</div><div class="label">场景成功</div></div>
+<div class="stat"><div class="value">2.25</div><div class="label">平均触发次数</div></div>
+<div class="stat"><div class="value">+2.84m</div><div class="label">平均路径差值</div></div>
+<div class="stat"><div class="value">B</div><div class="label">最大代价上升 +15.99m</div></div>
+<div class="stat"><div class="value">D</div><div class="label">最大收益 -5.08m</div></div>
+</div>
+<div class="card"><table><thead><tr><th>场景</th><th>触发</th><th>初始估计</th><th>最终决策</th><th>实际执行</th><th>差值</th></tr></thead><tbody><tr><td>A</td><td>2</td><td>87.04</td><td>87.93</td><td>88.07</td><td>+1.03m</td></tr><tr><td>B</td><td>2</td><td>141.60</td><td>157.42</td><td>157.59</td><td>+15.99m</td></tr><tr><td>C</td><td>2</td><td>106.06</td><td>105.42</td><td>105.48</td><td>-0.58m</td></tr><tr><td>D</td><td>3</td><td>112.89</td><td>107.66</td><td>107.81</td><td>-5.08m</td></tr></tbody></table></div>
+<div class="card"><ul><li>场景 B 说明：隐藏危险区会显著抬高执行代价。</li><li>场景 D 说明：语义修正还能发现更短路线。</li><li>因此本周 UAV 部分可以直接围绕“纠偏必要性 + 发现捷径能力”两点汇报。</li></ul></div>
+</div>
+<div class="footer"><span>默认策略：UAV 最多 3 页，只展示结果</span><span class="page"></span></div>
+</section>
+
+    <section class="slide standard">
+      <div class="eyebrow">分场景结果</div>
+      <h2>场景 A / 场景 B</h2>
+      <div class="pair-grid">
+        
+          <div class="scenario-card">
+            <div class="scenario-title">场景 A：沼泽绕行与矮墙捷径</div>
+            <div class="scenario-desc">UAV 初始将沼泽误判为普通地面，并将矮墙视作不可通过；机器狗先纠正沼泽语义，再发现可钻行矮墙捷径。</div>
+            <div class="image-row">
+              <img src="uav_robotdog/scenario_a_simple/scenario_a_simple_fusion.png" alt="fusion" />
+              <img src="uav_robotdog/scenario_a_simple/scenario_a_simple_metrics.png" alt="metrics" />
+            </div>
+            <ul>
+              <li>触发对象：沼泽、可钻行矮墙</li>
+              <li>关键数字：2 次；87.04m → 88.07m（+1.03m）</li>
+              <li>结论：纠偏后实际路径与最终决策估计基本一致，系统收敛稳定。</li>
+            </ul>
+          </div>
+          <div class="scenario-card">
+            <div class="scenario-title">场景 B：死胡同迷宫与隐藏流沙</div>
+            <div class="scenario-desc">迷宫路径首先把 UAV 引向隐藏流沙走廊；纠偏后，机器狗改走替代路线，并在后续识别到可钻行矮墙。</div>
+            <div class="image-row">
+              <img src="uav_robotdog/scenario_b_maze/scenario_b_maze_fusion.png" alt="fusion" />
+              <img src="uav_robotdog/scenario_b_maze/scenario_b_maze_metrics.png" alt="metrics" />
+            </div>
+            <ul>
+              <li>触发对象：流沙、可钻行矮墙</li>
+              <li>关键数字：2 次；141.60m → 157.59m（+15.99m）</li>
+              <li>结论：隐藏危险区导致路径显著变长，事件触发式纠偏是必要的。</li>
+            </ul>
+          </div>
+      </div>
+      <div class="footer"><span>UAV 结果页</span><span class="page"></span></div>
+    </section>
+    <section class="slide standard">
+      <div class="eyebrow">分场景结果</div>
+      <h2>场景 C / 场景 D</h2>
+      <div class="pair-grid">
+        
+          <div class="scenario-card">
+            <div class="scenario-title">场景 C：城市混合地形</div>
+            <div class="scenario-desc">城市障碍、水面和可钻行矮墙共同构成多次事件触发场景，用于验证连续语义纠偏与重规划。</div>
+            <div class="image-row">
+              <img src="uav_robotdog/scenario_c_complex/scenario_c_complex_fusion.png" alt="fusion" />
+              <img src="uav_robotdog/scenario_c_complex/scenario_c_complex_metrics.png" alt="metrics" />
+            </div>
+            <ul>
+              <li>触发对象：水面、可钻行矮墙</li>
+              <li>关键数字：2 次；106.06m → 105.48m（-0.58m）</li>
+              <li>结论：纠偏后实际路径与最终决策估计基本一致，系统收敛稳定。</li>
+            </ul>
+          </div>
+          <div class="scenario-card">
+            <div class="scenario-title">场景 D：多重误判水池与死胡同</div>
+            <div class="scenario-desc">该场景包含多个隐藏水池和死胡同墙体，只有一个末端墙体真实可翻越，用于检验复杂决策下的连续纠偏能力。</div>
+            <div class="image-row">
+              <img src="uav_robotdog/scenario_d_decision_complexity/scenario_d_decision_complexity_fusion.png" alt="fusion" />
+              <img src="uav_robotdog/scenario_d_decision_complexity/scenario_d_decision_complexity_metrics.png" alt="metrics" />
+            </div>
+            <ul>
+              <li>触发对象：水面（pool_center_1）、水面（pool_lower_2）、可翻越墙体</li>
+              <li>关键数字：3 次；112.89m → 107.81m（-5.08m）</li>
+              <li>结论：语义修正不仅纠错，还发现了比初始估计更短的可行路线。</li>
+            </ul>
+          </div>
+      </div>
+      <div class="footer"><span>UAV 结果页</span><span class="page"></span></div>
+    </section>
+</main>
+<div class="nav"><button id="prev">上一页</button><button id="next">下一页</button></div>
+<script>
+const slides=Array.from(document.querySelectorAll('.slide')); const pages=Array.from(document.querySelectorAll('.page')); let current=0;
+function render(){ slides.forEach((slide,index)=>slide.classList.toggle('active',index===current)); pages.forEach((page,index)=>{ page.textContent=(index+1)+' / '+slides.length; }); }
+function go(step){ current=Math.min(slides.length-1,Math.max(0,current+step)); render(); }
+document.getElementById('prev').addEventListener('click',()=>go(-1)); document.getElementById('next').addEventListener('click',()=>go(1));
+document.addEventListener('keydown',(event)=>{ if(["ArrowRight","PageDown"," "].includes(event.key)) go(1); if(["ArrowLeft","PageUp"].includes(event.key)) go(-1); }); render();
+</script>
+</body></html>

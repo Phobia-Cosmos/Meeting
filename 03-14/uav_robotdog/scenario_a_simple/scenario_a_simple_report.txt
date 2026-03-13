@@ -1,0 +1,46 @@
+Scenario: Scenario A: Swamp Detour and Crawl Wall Shortcut
+Description: UAV initially treats swamp as ground and low wall as solid; dog discovers swamp first, then low wall shortcut.
+Map Size: 100 x 70
+Start: (8, 35)
+Goal: (92, 35)
+Perception Radius: 12
+
+=== Semantic Obstacles ===
+Dog-passable walls: ['crawl_wall_center']
+Swamp / quicksand / water: ['swamp_upper_route']
+
+=== Planning Summary ===
+P_0: whole_mission=87.04m, remaining=87.04m, prefix_before_plan=0.0m, waypoints=4, turns=2, time=70.463ms, obstacles=6
+P_1: whole_mission=94.56m, remaining=73.58m, prefix_before_plan=20.98m, waypoints=6, turns=4, time=46.28ms, obstacles=7
+P_2: whole_mission=87.93m, remaining=56.04m, prefix_before_plan=31.89m, waypoints=2, turns=0, time=8.174ms, obstacles=6
+
+=== Decision Length Evolution ===
+Initial decision P_0: 87.04m
+E1 (沼泽) -> P_1: 94.56m (+7.52m)
+E2 (可钻行矮墙) -> P_2: 87.93m (-6.63m)
+
+=== Trigger Events ===
+E1 @ (28.36, 40.09)
+  source plan: P_0
+  triggered by: swamp_upper_route
+  visible ids: ['swamp_upper_route']
+    - packet swamp_upper_route: 沼泽
+      traversable=False
+      properties={'surface': 'swamp', 'traversable': False, 'note': 'UAV top-view misclassifies it as normal ground'}
+
+E2 @ (36.00, 33.14)
+  source plan: P_1
+  triggered by: crawl_wall_center
+  visible ids: ['crawl_wall_center']
+    - packet crawl_wall_center: 可钻行矮墙
+      traversable=True
+      properties={'height': 1.1, 'bottom_clearance': 0.45, 'dog_passable': True, 'render': 'dashed'}
+
+=== Final Result ===
+Success: True
+Discovered semantic obstacle ids: ['crawl_wall_center', 'swamp_upper_route']
+Executed actual mission length: 88.07m
+Initial whole-mission estimate: 87.04m
+Initial remaining length: 87.04m
+Final-decision whole-mission estimate: 87.93m
+Final remaining length: 56.04m

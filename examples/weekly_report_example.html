@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>组会汇报示例</title>
+  <style>
+    :root {
+      --bg: #eff6ff;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --primary: #2563eb;
+      --soft: #dbeafe;
+      --border: #cbd5e1;
+      --success: #0f766e;
+      --warn: #b45309;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(135deg, #dbeafe 0%, #eef2ff 45%, #f8fafc 100%);
+      color: var(--text);
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .slide {
+      display: none;
+      width: min(94vw, calc(94vh * 16 / 9));
+      aspect-ratio: 16 / 9;
+      background: var(--panel);
+      border-radius: 28px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+      padding: 44px 54px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slide.active { display: grid; }
+    .cover {
+      grid-template-rows: auto 1fr auto;
+      background:
+        radial-gradient(circle at top right, rgba(37, 99, 235, 0.18), transparent 24%),
+        linear-gradient(135deg, #eff6ff 0%, #ffffff 58%, #f8fafc 100%);
+    }
+    .standard { grid-template-rows: auto 1fr auto; gap: 22px; }
+
+    .eyebrow {
+      color: var(--primary);
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    h1 {
+      margin: 0;
+      font-size: 42px;
+      line-height: 1.18;
+    }
+    h2 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.25;
+    }
+    .subtitle {
+      font-size: 21px;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 860px;
+      margin-top: 18px;
+    }
+    .meta {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      background: var(--soft);
+      color: var(--primary);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 22px;
+      height: 100%;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .card, .panel {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+    }
+    .card h3, .panel h3 {
+      margin: 0 0 12px;
+      font-size: 20px;
+    }
+    .card p, .panel p, .panel li {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.7;
+      color: #1e293b;
+    }
+    ul { margin: 0; padding-left: 22px; }
+
+    .figure {
+      border-radius: 18px;
+      border: 1px solid #bfdbfe;
+      background:
+        linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%),
+        repeating-linear-gradient(90deg, transparent 0, transparent 28px, rgba(37, 99, 235, 0.08) 28px, rgba(37, 99, 235, 0.08) 29px),
+        repeating-linear-gradient(0deg, transparent 0, transparent 28px, rgba(37, 99, 235, 0.08) 28px, rgba(37, 99, 235, 0.08) 29px);
+      min-height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      color: #475569;
+      text-align: center;
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .stat {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .value {
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .label {
+      font-size: 16px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+    .tag-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .tag {
+      font-size: 14px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    .tag.ok { background: #ccfbf1; color: var(--success); }
+    .tag.warn { background: #ffedd5; color: var(--warn); }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .page {
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .nav {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+    button {
+      border: none;
+      background: #1d4ed8;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.28);
+    }
+
+    @media print {
+      body { overflow: visible; display: block; background: #fff; }
+      .deck { display: block; width: auto; height: auto; }
+      .slide {
+        display: grid !important;
+        width: 100%;
+        max-width: none;
+        border-radius: 0;
+        box-shadow: none;
+        page-break-after: always;
+        break-after: page;
+      }
+      .nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide cover active">
+      <div class="eyebrow">课题组周会汇报示例</div>
+      <div>
+        <h1>缓存侧信道实验阶段进展</h1>
+        <p class="subtitle">本周完成实验链路打通、脚本参数统一与首批结果采样，已经能够观察到目标事件与访存模式之间的稳定相关性。</p>
+      </div>
+      <div class="meta">
+        <span class="chip">日期：2026-03-14</span>
+        <span class="chip">汇报人：研究生示例</span>
+        <span class="chip">主题：实验验证与阶段分析</span>
+      </div>
+    </section>
+
+    <section class="slide standard">
+      <h2>1. 本周工作概览</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>环境准备</h3>
+          <p>完成依赖核查、运行环境确认与基础脚本联调，保证实验流程可以重复执行。</p>
+        </div>
+        <div class="card">
+          <h3>实验执行</h3>
+          <p>统一采样参数后完成多组实验，获得第一批可对比结果，用于判断方案可行性。</p>
+        </div>
+        <div class="card">
+          <h3>阶段判断</h3>
+          <p>当前趋势稳定，说明方案具备继续扩展样本规模和优化流程的价值。</p>
+        </div>
+      </div>
+      <div class="footer">
+        <span>这一页适合讲“本周到底做成了什么”</span>
+        <span class="page"></span>
+      </div>
+    </section>
+
+    <section class="slide standard">
+      <h2>2. 方法与实验过程</h2>
+      <div class="grid-2">
+        <div class="panel">
+          <h3>执行步骤</h3>
+          <ul>
+            <li>整理实验脚本并固定输入参数，避免多轮实验条件不一致。</li>
+            <li>补充预热与重复采样环节，减少单次运行偶然性。</li>
+            <li>记录每轮实验日志、截图与结果摘要，便于后续汇报直接引用。</li>
+            <li>将数据按实验组/对照组分类，形成可比较的阶段结果。</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag ok">流程已打通</span>
+            <span class="tag ok">参数已统一</span>
+            <span class="tag warn">噪声待进一步抑制</span>
+          </div>
+        </div>
+        <div class="figure">
+          这里后续可以替换为：<br />
+          实验流程图 / 系统结构图 / 代码模块截图 / 终端运行截图
+        </div>
+      </div>
+      <div class="footer">
+        <span>如果你给我图片，我后续会直接替换这里的占位框</span>
+        <span class="page"></span>
+      </div>
+    </section>
+
+    <section class="slide standard">
+      <h2>3. 关键结果与阶段结论</h2>
+      <div style="display:grid; gap:22px;">
+        <div class="stats">
+          <div class="stat">
+            <div class="value">3 组</div>
+            <div class="label">已完成对照实验</div>
+          </div>
+          <div class="stat">
+            <div class="value">稳定</div>
+            <div class="label">主要趋势可重复观测</div>
+          </div>
+          <div class="stat">
+            <div class="value">可继续</div>
+            <div class="label">具备扩大样本条件</div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="figure">
+            结果图占位：<br />
+            这里适合放曲线图、柱状图、对比图，或者终端统计结果截图
+          </div>
+          <div class="panel">
+            <h3>结果解读</h3>
+            <ul>
+              <li>在多轮实验中，目标模式表现出较稳定的相关趋势。</li>
+              <li>实验组与对照组之间已经出现可区分差异，说明当前方法有可验证价值。</li>
+              <li>个别数据存在抖动，但现阶段不影响总体结论。</li>
+              <li>一句话结论：当前方案已从“能否跑通”进入“如何做强结果”的阶段。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <span>讲结果时，建议按“现象 -> 原因 -> 意义”来讲</span>
+        <span class="page"></span>
+      </div>
+    </section>
+
+    <section class="slide standard">
+      <h2>4. 当前问题与下周计划</h2>
+      <div class="grid-2">
+        <div class="panel">
+          <h3>问题与风险</h3>
+          <ul>
+            <li>部分轮次数据抖动较大，说明环境噪声仍然存在。</li>
+            <li>结果规模还不够大，暂时更适合做趋势判断而不是最终定量结论。</li>
+            <li>还需要继续补充基线组与不同参数组合下的比较。</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3 style="color:var(--success);">下周计划</h3>
+          <ul>
+            <li>扩大采样轮次，统计方差并筛查异常样本。</li>
+            <li>增加更多参数组合实验，验证结论稳健性。</li>
+            <li>沉淀成可复现实验文档，为后续写论文或中期汇报做准备。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer">
+        <span>最后一页也可以额外加一块“需要讨论的问题”</span>
+        <span class="page"></span>
+      </div>
+    </section>
+  </main>
+
+  <div class="nav">
+    <button id="prev">上一页</button>
+    <button id="next">下一页</button>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const pages = Array.from(document.querySelectorAll('.page'));
+    let current = 0;
+
+    function render() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === current);
+      });
+      pages.forEach((page, index) => {
+        page.textContent = `${index + 1} / ${slides.length}`;
+      });
+    }
+
+    function go(step) {
+      current = Math.min(slides.length - 1, Math.max(0, current + step));
+      render();
+    }
+
+    document.getElementById('prev').addEventListener('click', () => go(-1));
+    document.getElementById('next').addEventListener('click', () => go(1));
+    document.addEventListener('keydown', (event) => {
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) go(1);
+      if (["ArrowLeft", "PageUp"].includes(event.key)) go(-1);
+    });
+
+    render();
+  </script>
+</body>
+</html>

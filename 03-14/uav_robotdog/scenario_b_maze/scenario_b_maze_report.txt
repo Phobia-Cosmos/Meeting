@@ -1,0 +1,46 @@
+Scenario: Scenario B: Dead-End Maze with Hidden Quicksand
+Description: A maze first lures the UAV upward into a hidden quicksand corridor; after correction the dog reroutes and may later exploit a low wall shortcut.
+Map Size: 100 x 90
+Start: (8, 45)
+Goal: (94, 45)
+Perception Radius: 10
+
+=== Semantic Obstacles ===
+Dog-passable walls: ['crawl_wall_exit']
+Swamp / quicksand / water: ['quicksand_trap']
+
+=== Planning Summary ===
+P_0: whole_mission=141.6m, remaining=141.6m, prefix_before_plan=0.0m, waypoints=11, turns=6, time=422.988ms, obstacles=6
+P_1: whole_mission=157.09m, remaining=118.56m, prefix_before_plan=38.53m, waypoints=9, turns=6, time=262.623ms, obstacles=7
+P_2: whole_mission=157.42m, remaining=87.82m, prefix_before_plan=69.6m, waypoints=6, turns=3, time=141.384ms, obstacles=6
+
+=== Decision Length Evolution ===
+Initial decision P_0: 141.6m
+E1 (流沙) -> P_1: 157.09m (+15.49m)
+E2 (可钻行矮墙) -> P_2: 157.42m (+0.33m)
+
+=== Trigger Events ===
+E1 @ (37.78, 66.46)
+  source plan: P_0
+  triggered by: quicksand_trap
+  visible ids: ['quicksand_trap']
+    - packet quicksand_trap: 流沙
+      traversable=False
+      properties={'surface': 'quicksand', 'traversable': False, 'note': 'UAV cannot distinguish material from top view'}
+
+E2 @ (59.82, 82.99)
+  source plan: P_1
+  triggered by: crawl_wall_exit
+  visible ids: ['crawl_wall_exit']
+    - packet crawl_wall_exit: 可钻行矮墙
+      traversable=True
+      properties={'height': 1.0, 'bottom_clearance': 0.4, 'dog_passable': True, 'render': 'dashed'}
+
+=== Final Result ===
+Success: True
+Discovered semantic obstacle ids: ['crawl_wall_exit', 'quicksand_trap']
+Executed actual mission length: 157.59m
+Initial whole-mission estimate: 141.6m
+Initial remaining length: 141.6m
+Final-decision whole-mission estimate: 157.42m
+Final remaining length: 87.82m
